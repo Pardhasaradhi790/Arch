@@ -60,8 +60,8 @@ with Diagram(
     # -- Review --
     sme = Users('Business SME\nApprove / Decline')
 
-    # -- qntxt Server: both final DBs on the same separate server --
-    with Cluster('qntxt Server\n(Separate Resource Group)', graph_attr=EXT):
+    # -- QNXT Server: both final DBs on the same separate server --
+    with Cluster('QNXT Server\n(Separate Resource Group)', graph_attr=EXT):
         updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
         qntxt_db      = SQLDatabases('qntxt DB')
 
