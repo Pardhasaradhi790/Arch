@@ -19,7 +19,7 @@ graph_attr = {
 ZONE   = {'style': 'filled', 'bgcolor': '#E8F4FD', 'pencolor': '#5A9FD4', 'penwidth': '1.5', 'fontsize': '12'}
 GREEN  = {'style': 'filled', 'bgcolor': '#E8F8EF', 'pencolor': '#2E8B57', 'penwidth': '1.5', 'fontsize': '12'}
 EXT    = {'style': 'filled', 'bgcolor': '#F5F0FF', 'pencolor': '#7B2FBE', 'penwidth': '2.0', 'fontsize': '13'}
-SERVER = {'style': 'filled', 'bgcolor': '#F0F4FF', 'pencolor': '#1A56DB', 'penwidth': '2.5', 'fontsize': '14', 'fontcolor': '#1A56DB'}
+SERVER = {'style': 'filled', 'bgcolor': '#F0F4FF', 'pencolor': '#1A56DB', 'penwidth': '2.5', 'fontsize': '16', 'fontcolor': '#1A56DB', 'labeljust': 'c', 'fontname': 'Helvetica-Bold'}
 
 with Diagram(
     'CSRA Fee Schedule Rule Validation Architecture',
@@ -60,13 +60,10 @@ with Diagram(
     # -- Review --
     sme = Users('Business SME\nApprove / Decline')
 
-    # -- Approved rules DB (this server) --
-    with Cluster('Updated Rules on Approval', graph_attr=GREEN):
-        updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
-
-    # -- qntxt DB on a separate server --
+    # -- qntxt Server: both final DBs on the same separate server --
     with Cluster('qntxt Server\n(Separate Resource Group)', graph_attr=EXT):
-        qntxt_db = SQLDatabases('qntxt DB')
+        updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
+        qntxt_db      = SQLDatabases('qntxt DB')
 
     # Rules ingestion pipeline
     rules_admin  >> Edge(label='Upload rules Excel')    >> rules_blob
