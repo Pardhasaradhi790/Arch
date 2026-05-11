@@ -41,7 +41,7 @@ with Diagram(
 
     # -- Fee schedule pipeline --
     with Cluster('Fee Schedule Ingestion', graph_attr=ZONE):
-        bot  = BotServices('Playwright\nDownload Bot')
+        bot  = BotServices('RPA Bot')
         blob = BlobStorage('Raw Files\nBlob Storage')
 
     with Cluster('Fee Schedule Processing', graph_attr=ZONE):
