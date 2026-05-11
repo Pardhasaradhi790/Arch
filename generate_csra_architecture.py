@@ -2,7 +2,7 @@
 from diagrams.azure.compute import FunctionApps
 from diagrams.azure.storage import BlobStorage
 from diagrams.azure.analytics import DataFactories
-from diagrams.azure.database import SQLDatabases, CosmosDb
+from diagrams.azure.database import SQLDatabases
 from diagrams.azure.aimachinelearning import CognitiveServices, CognitiveSearch, BotServices
 from diagrams.azure.general import Browser
 from diagrams.onprem.client import Users
@@ -60,10 +60,13 @@ with Diagram(
     # -- Review --
     sme = Users('Business SME\nApprove / Decline')
 
-    # -- Other Server: final DB + qntxt DB --
-    with Cluster('Other Server\n(Separate Resource Group)', graph_attr=EXT):
+    # -- Approved rules DB (this server) --
+    with Cluster('Updated Rules on Approval', graph_attr=GREEN):
         updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
-        qntxt_db      = CosmosDb('qntxt DB')
+
+    # -- qntxt DB on a separate server --
+    with Cluster('qntxt Server\n(Separate Resource Group)', graph_attr=EXT):
+        qntxt_db = SQLDatabases('qntxt DB')
 
     # Rules ingestion pipeline
     rules_admin  >> Edge(label='Upload rules Excel')    >> rules_blob
