@@ -61,7 +61,7 @@ with Diagram(
     sme = Users('Business SME\nApprove / Decline')
 
     # -- QNXT Server: both final DBs on the same separate server --
-    with Cluster('Existing Server\nQNXT Server\n(Separate Resource Group)', graph_attr=EXT):
+    with Cluster('QNXT Server (Existing Server)', graph_attr=EXT):
         updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
         qntxt_db      = SQLDatabases('qntxt DB')
 
