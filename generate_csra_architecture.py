@@ -18,7 +18,7 @@ graph_attr = {
 
 ZONE   = {'style': 'filled', 'bgcolor': '#E8F4FD', 'pencolor': '#5A9FD4', 'penwidth': '1.5', 'fontsize': '12'}
 GREEN  = {'style': 'filled', 'bgcolor': '#E8F8EF', 'pencolor': '#2E8B57', 'penwidth': '1.5', 'fontsize': '12'}
-EXT    = {'style': 'filled', 'bgcolor': '#F5F0FF', 'pencolor': '#7B2FBE', 'penwidth': '2.0', 'fontsize': '13'}
+EXT    = {'style': 'filled', 'bgcolor': '#F5F0FF', 'pencolor': '#7B2FBE', 'penwidth': '2.5', 'fontsize': '20', 'fontcolor': '#7B2FBE', 'labeljust': 'c', 'fontname': 'Helvetica-Bold'}
 SERVER = {'style': 'filled', 'bgcolor': '#F0F4FF', 'pencolor': '#1A56DB', 'penwidth': '2.5', 'fontsize': '20', 'fontcolor': '#1A56DB', 'labeljust': 'c', 'fontname': 'Helvetica-Bold'}
 
 with Diagram(
