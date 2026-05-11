@@ -2,11 +2,9 @@
 from diagrams.azure.compute import FunctionApps
 from diagrams.azure.storage import BlobStorage
 from diagrams.azure.analytics import DataFactories
-from diagrams.azure.database import SQLDatabases
-from diagrams.azure.aimachinelearning import CognitiveServices, CognitiveSearch
-from diagrams.azure.security import KeyVaults
+from diagrams.azure.database import SQLDatabases, CosmosDb
+from diagrams.azure.aimachinelearning import CognitiveServices, CognitiveSearch, BotServices
 from diagrams.azure.general import Browser
-from diagrams.azure.monitor import Monitor
 from diagrams.onprem.client import Users
 
 graph_attr = {
@@ -20,7 +18,7 @@ graph_attr = {
 
 ZONE  = {'style': 'filled', 'bgcolor': '#E8F4FD', 'pencolor': '#5A9FD4', 'penwidth': '1.5', 'fontsize': '12'}
 GREEN = {'style': 'filled', 'bgcolor': '#E8F8EF', 'pencolor': '#2E8B57', 'penwidth': '1.5', 'fontsize': '12'}
-ORG   = {'style': 'filled', 'bgcolor': '#FFF8EE', 'pencolor': '#FF8C00', 'penwidth': '1.5', 'fontsize': '12'}
+EXT   = {'style': 'filled', 'bgcolor': '#F5F0FF', 'pencolor': '#7B2FBE', 'penwidth': '1.5', 'fontsize': '12'}
 
 with Diagram(
     'CSRA Fee Schedule Rule Validation Architecture',
@@ -43,7 +41,7 @@ with Diagram(
 
     # -- Fee schedule pipeline --
     with Cluster('Fee Schedule Ingestion', graph_attr=ZONE):
-        bot  = FunctionApps('Playwright\nDownload Bot')
+        bot  = BotServices('Playwright\nDownload Bot')
         blob = BlobStorage('Raw Files\nBlob Storage')
 
     with Cluster('Fee Schedule Processing', graph_attr=ZONE):
@@ -61,10 +59,9 @@ with Diagram(
     with Cluster('Updated Rules on Approval', graph_attr=GREEN):
         updated_rules = SQLDatabases('Rules DB\n(Approved Updates Applied)')
 
-    # -- Security and monitoring (anchored far right) --
-    with Cluster('Security and Monitoring', graph_attr=ORG):
-        kv      = KeyVaults('Azure Key Vault')
-        monitor = Monitor('Azure Monitor')
+    # -- qntxt DB in a separate resource group --
+    with Cluster('Separate Resource Group', graph_attr=EXT):
+        qntxt_db = CosmosDb('qntxt DB')
 
     # Rules ingestion pipeline
     rules_admin  >> Edge(label='Upload rules Excel')    >> rules_blob
@@ -87,15 +84,10 @@ with Diagram(
     ai_search >> Edge(label='Matching rules and SPs\nas LLM context',
                       color='#0078D4', penwidth='2')    >> openai
 
+    # qntxt DB provides context to OpenAI
+    qntxt_db  >> Edge(label='Context lookup', color='#7B2FBE', penwidth='2') >> openai
+
     # Review and approval
     openai >> Edge(label='Suggest updates or\nNo changes needed') >> sme
     sme    >> Edge(label='Approved', style='dashed',
                    color='#2E8B57', penwidth='2')       >> updated_rules
-
-    # Anchor security to far right
-    updated_rules >> Edge(style='invis') >> kv
-    updated_rules >> Edge(style='invis') >> monitor
-
-    # Security semantic edges (forward, no crossing)
-    updated_rules >> Edge(style='dashed', color='#FF8C00') >> kv
-    updated_rules >> Edge(style='dashed', color='gray')    >> monitor
